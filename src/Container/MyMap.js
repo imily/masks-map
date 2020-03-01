@@ -7,9 +7,7 @@ import {
   InfoWindow
 } from "react-google-maps";
 import axios from 'axios';
-import * as testData from "./testData.json";
-import mapStyle from "./mapStyle";
-import { callGetShopes } from './Api/Shopes';
+import mapStyle from "../Data/mapStyle";
 
 const MapWrapped = withScriptjs(withGoogleMap(Map));
 
@@ -31,9 +29,6 @@ export function Map () {
       const result = await axios(url);
       setDefaultShop(result.data.features);
     };
-
-    //callGetShopes().then(json => console.log(json));
-
     fetchData();
   },[]);
 
@@ -49,14 +44,13 @@ export function Map () {
 
     getMapData();
   },[]);
-
   return (
     <>
     {(defaultShop === null || !defalutMap) ? (<p>Loading.....</p>) : (
       <GoogleMap
-      defaultZoom={15}
-      defaultCenter={{ lat: defalutMap[0], lng: defalutMap[1] }}
-      // defaultOptions={{styles: mapStyle}}
+        defaultZoom={15}
+        defaultCenter={{ lat: defalutMap[0], lng: defalutMap[1] }}
+        // defaultOptions={{styles: mapStyle}}
       >
         {//console.log(defalutMap, defaultShop)
         defaultShop.map((park, index) => (

@@ -1,7 +1,7 @@
 import React from 'react';
-import './App.scss';
-import SideMenu from './SideMenu';
-import MyMap from './MyMap';
+import './Css/App.scss';
+import SideMenu from './Container/SideMenu';
+import MyMap from './Container/MyMap';
 
 export default function App() {
   return (
