@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useMappedState, useDispatch } from 'redux-react-hook';
 import {
   withGoogleMap,
   withScriptjs,
@@ -6,54 +7,39 @@ import {
   Marker,
   InfoWindow
 } from "react-google-maps";
-import axios from 'axios';
 import mapStyle from "../Data/mapStyle";
+
+import { dispatchReceiveLocation } from '../Redux/Action/Location';
+import { dispatchReceiveCname } from '../Redux/Action/Shopes';
 
 const MapWrapped = withScriptjs(withGoogleMap(Map));
 
-function initMap () {
-  return new Promise((res, rej) => {
-    navigator.geolocation.watchPosition(position => {
-      res([position.coords.latitude, position.coords.longitude]);
-    });
-  });
-}
-
 export function Map () {
   const [selectPark, setSelectPark] = useState(null);
-  
-  const [defaultShop, setDefaultShop] = useState(null);
+
+  const mapState = useCallback(
+    state => ({
+      loaction: state.location.list,
+      shopes: state.shopes.list
+    }), []);
+  const { loaction, shopes } = useMappedState(mapState);
+
+  const dispatch = useDispatch();
   useEffect(() => {
-    const url = 'https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json';
-    const fetchData = async () => {
-      const result = await axios(url);
-      setDefaultShop(result.data.features);
-    };
-    fetchData();
+    dispatch(dispatchReceiveLocation());
+    dispatch(dispatchReceiveCname());
   },[]);
 
-  const [defalutMap, setDefalutMap] = useState(null);
-  useEffect(() => {
-    const getMapData = async () => {
-      let result = null;
-      await initMap().then(json => {
-        result = json;
-        setDefalutMap(result);
-      });
-    };
-
-    getMapData();
-  },[]);
+  const isLoading = ((loaction.length === 0) || (shopes.length === 0));
   return (
     <>
-    {(defaultShop === null || !defalutMap) ? (<p>Loading.....</p>) : (
+    {isLoading ? (<p>Loading.....</p>) : (
       <GoogleMap
         defaultZoom={15}
-        defaultCenter={{ lat: defalutMap[0], lng: defalutMap[1] }}
+        defaultCenter={{ lat: loaction[0], lng: loaction[1] }}
         // defaultOptions={{styles: mapStyle}}
       >
-        {//console.log(defalutMap, defaultShop)
-        defaultShop.map((park, index) => (
+        {shopes.map((park, index) => (
           <Marker
             key={ park.properties.id }
             position={{ 

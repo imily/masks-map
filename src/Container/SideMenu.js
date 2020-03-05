@@ -1,27 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useCallback } from 'react';
+import { useMappedState } from 'redux-react-hook';
 import { Menu, Dropdown, Icon, Input, Skeleton } from 'antd';
 
 const { Search } = Input;
 
 export default function SideMenu () {
-    const [defaultShop, setDefaultShop] = useState(null);
-    const [defalutMap, setDefalutMap] = useState(null);
-
-    useEffect(() => {
-      const getMapData = async () => {
-        const url = 'https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json';
-        const shopes = await axios(url);
-
-        await initMap().then(userLocation => {
-          setDefalutMap(userLocation);
-          setDefaultShop(generateNearbyShop(userLocation, shopes.data.features, 1000));
-        });
-
-      };
-      getMapData();
-    },[]);
-
     function calculateDistance(pointA, pointB) {
       // http://www.movable-type.co.uk/scripts/latlong.html
       const lat1 = pointA[0];
@@ -54,14 +37,6 @@ export default function SideMenu () {
       }
       return list;
     }
-    
-    function initMap () {
-      return new Promise((res, rej) => {
-        navigator.geolocation.watchPosition(position => {
-          res([position.coords.latitude, position.coords.longitude]);
-        });
-      });
-    }
 
     function gererateBusinessHours(text) {
       return text.split('、');
@@ -80,6 +55,13 @@ export default function SideMenu () {
       );
     }
 
+    const mapState = useCallback(
+      state => ({
+        loaction: state.location.list,
+        shopes: state.shopes.list
+      }), []);
+    const { loaction, shopes } = useMappedState(mapState);
+    const isLoading = ((loaction.length === 0) || (shopes.length === 0));
     return (
       <div className="side-search">
           <div className="filter-type">
@@ -89,7 +71,7 @@ export default function SideMenu () {
               style={{ width: 200 }}
               className="search-main-style"
             />
-            {defaultShop === null ? (<Skeleton active />) : (
+            {isLoading ? (<Skeleton active />) : (
             <>
               <Dropdown
                 overlay={gererateDropMenu(['一公里', '五公里', '十公里'])}
@@ -108,7 +90,7 @@ export default function SideMenu () {
                 </button>
               </Dropdown>
               <Dropdown
-                overlay={gererateDropMenu(gererateBusinessHours(defaultShop[0].properties.available))}
+                overlay={gererateDropMenu(gererateBusinessHours(shopes[0].properties.available))}
                 trigger={['click']} className="select-main-style"
               >
                 <button className="ant-dropdown-link">
@@ -121,18 +103,14 @@ export default function SideMenu () {
               <Icon type="star" />
             </button>
           </div>
-          {((defaultShop === null) || (defalutMap === null)) ? (<Skeleton active />) : (
+          {isLoading ? (<Skeleton active />) : (
             <ul className="shop-info">
-            {/* {console.log(defaultShop[0].geometry.coordinates)} */}
-            {/* {console.log(defalutMap)} */}
-            {/* {console.log(calculateDistance(defalutMap,defaultShop[0].geometry.coordinates))} */}
-            {console.log(defaultShop)}
-            {defaultShop.map(shop => (
+            {generateNearbyShop(loaction, shopes, 1000).map(shop => (
               <li key={shop.properties.id}>
                 <button className="mark-button">
                   <Icon type="star" />
                 </button>
-                <span className="distance">{calculateDistance(defalutMap, shop.geometry.coordinates)}公尺</span>
+                <span className="distance">{calculateDistance(loaction, shop.geometry.coordinates)}公尺</span>
                 <p className="title">{shop.properties.name}</p>
                 <span className="address">{shop.properties.address}</span>
                 <span className="phone">{shop.properties.phone}</span>
