@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useMappedState, useDispatch } from 'redux-react-hook';
 import {
   withGoogleMap,
@@ -8,6 +8,7 @@ import {
   InfoWindow
 } from "react-google-maps";
 import mapStyle from "../Data/mapStyle";
+import { StandaloneSearchBox } from 'react-google-maps/lib/components/places/StandaloneSearchBox';
 
 import { dispatchReceiveLocation } from '../Redux/Action/Location';
 import { dispatchReceiveCname } from '../Redux/Action/Shopes';
@@ -30,11 +31,48 @@ export function Map () {
     dispatch(dispatchReceiveCname());
   },[]);
 
+  // google search
+  const refs = {};
+  const onSearchBoxMounted = ref => {
+    refs.searchBox = ref;
+  }
+  const [places, setPlace] = useState(null);
+  const onPlacesChanged = () => {
+    const data = refs.searchBox.getPlaces();
+    setPlace(data);
+    const bounds = new window.google.LatLngBounds();
+    data.forEach(place => {
+      if (place.geometry.viewport) {
+        bounds.union(place.geometry.viewport)
+      } else {
+        bounds.extend(place.geometry.location)
+      }
+    });
+    const nextMarkers = data.map(place => ({
+      position: place.geometry.location,
+    }));
+    console.log(nextMarkers);
+  }
+  const onMapMounted = ref => {
+    refs.map = ref;
+  }
+  const [bounds, setBounds] = useState(null);
+  const onBoundsChanged = () => {
+    const data = {
+      bounds: refs.map.getBounds(),
+      center: refs.map.getCenter()
+    };
+    setBounds(data);
+  }
+  // google search end
+
   const isLoading = ((loaction.length === 0) || (shopes.length === 0));
   return (
     <>
     {isLoading ? (<p>Loading.....</p>) : (
       <GoogleMap
+        ref={onMapMounted}
+        onBoundsChanged={onBoundsChanged}
         defaultZoom={15}
         defaultCenter={{ lat: loaction[0], lng: loaction[1] }}
         // defaultOptions={{styles: mapStyle}}
@@ -70,6 +108,44 @@ export function Map () {
             </div>
           </InfoWindow>
         )}
+        {/* {!places ? null: (
+          <ol>
+            {places.map(
+              ({ place_id, formatted_address, geometry: { location } }) => {
+                return <li key={place_id}>
+                  {formatted_address}
+                  {" at "}({location.lat()}, {location.lng()})
+                </li>
+              }
+            )}
+          </ol>
+        )} */}
+        {console.log(bounds)}
+        <StandaloneSearchBox 
+            ref={onSearchBoxMounted}
+            // bounds={bounds}
+            onPlacesChanged={onPlacesChanged}
+          >
+          <input
+            type="text"
+            placeholder="Customized your placeholder"
+            style={{
+              boxSizing: `border-box`,
+              border: `1px solid transparent`,
+              width: `240px`,
+              height: `32px`,
+              padding: `0 12px`,
+              borderRadius: `3px`,
+              boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+              fontSize: `14px`,
+              outline: `none`,
+              textOverflow: `ellipses`,
+              position: 'absolute',
+              top: 0,
+              right: 0
+            }}
+          />
+        </StandaloneSearchBox>
       </GoogleMap>
     )}
     </>

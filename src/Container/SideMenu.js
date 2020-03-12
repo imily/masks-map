@@ -3,6 +3,7 @@ import { useMappedState } from 'redux-react-hook';
 import { Menu, Dropdown, Icon, Input, Skeleton } from 'antd';
 
 const { Search } = Input;
+const DEFAULT_DISTANCE = 2000;
 
 export default function SideMenu () {
     function calculateDistance(pointA, pointB) {
@@ -105,7 +106,8 @@ export default function SideMenu () {
           </div>
           {isLoading ? (<Skeleton active />) : (
             <ul className="shop-info">
-            {generateNearbyShop(loaction, shopes, 1000).map(shop => (
+            {generateNearbyShop(loaction, shopes, DEFAULT_DISTANCE).length === 0 ? (<p>附近無藥局</p>) :
+              (generateNearbyShop(loaction, shopes, DEFAULT_DISTANCE).map(shop => (
               <li key={shop.properties.id}>
                 <button className="mark-button">
                   <Icon type="star" />
@@ -130,7 +132,7 @@ export default function SideMenu () {
                   <div className="child">兒童口罩 <strong>{shop.properties.mask_child}</strong></div>
                 </div>
                 <div className="update-time">更新時間 {shop.properties.updated}</div>
-              </li>
+              </li>)
             ))}
           </ul>
           )}
