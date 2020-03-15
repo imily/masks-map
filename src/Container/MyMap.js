@@ -1,29 +1,21 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useMappedState, useDispatch } from 'redux-react-hook';
-import {
-  withGoogleMap,
-  withScriptjs,
-  GoogleMap,
-  Marker,
-  InfoWindow
-} from "react-google-maps";
-import mapStyle from "../Data/mapStyle";
-import { StandaloneSearchBox } from 'react-google-maps/lib/components/places/StandaloneSearchBox';
+import GoogleMapReact from 'google-map-react';
 
 import { dispatchReceiveLocation } from '../Redux/Action/Location';
 import { dispatchReceiveCname } from '../Redux/Action/Shopes';
+import Marker from './Marker';
+import SearchBox from './SearchBox';
 
-const MapWrapped = withScriptjs(withGoogleMap(Map));
+const DEFAULT_DISTANCE = 5000;
 
-export function Map () {
-  const [selectPark, setSelectPark] = useState(null);
-
+export default function MyMap() {
   const mapState = useCallback(
     state => ({
-      loaction: state.location.list,
+      location: state.location.list,
       shopes: state.shopes.list
     }), []);
-  const { loaction, shopes } = useMappedState(mapState);
+  const { location, shopes } = useMappedState(mapState);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -31,137 +23,78 @@ export function Map () {
     dispatch(dispatchReceiveCname());
   },[]);
 
-  // google search
-  const refs = {};
-  const onSearchBoxMounted = ref => {
-    refs.searchBox = ref;
+  function calculateDistance(pointA, pointB) {
+    // http://www.movable-type.co.uk/scripts/latlong.html
+    const lat1 = pointA.lat;
+    const lon1 = pointA.lng;
+  
+    const lat2 = pointB[1];
+    const lon2 = pointB[0];
+  
+    const R = 6371e3; // earth radius in meters
+    const φ1 = lat1 * (Math.PI / 180);
+    const φ2 = lat2 * (Math.PI / 180);
+    const Δφ = (lat2 - lat1) * (Math.PI / 180);
+    const Δλ = (lon2 - lon1) * (Math.PI / 180);
+  
+    const a = (Math.sin(Δφ / 2) * Math.sin(Δφ / 2)) +
+              ((Math.cos(φ1) * Math.cos(φ2)) * (Math.sin(Δλ / 2) * Math.sin(Δλ / 2)));
+    
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  
+    const distance = R * c;
+    return Math.round(distance); // in meters
   }
-  const [places, setPlace] = useState(null);
-  const onPlacesChanged = () => {
-    const data = refs.searchBox.getPlaces();
-    setPlace(data);
-    const bounds = new window.google.LatLngBounds();
-    data.forEach(place => {
-      if (place.geometry.viewport) {
-        bounds.union(place.geometry.viewport)
-      } else {
-        bounds.extend(place.geometry.location)
-      }
+  
+  function generateNearbyShop(userLocation, shopes, distance){
+    const list = [];
+    for (let i = 0; i < shopes.length; i ++) {
+      if (calculateDistance(userLocation, shopes[i].geometry.coordinates) <= distance) {
+        list.push(shopes[i]);
+      };
+    }
+    return list;
+  }
+
+  const [maps, setMaps] = useState({});
+  function setGoogleMaps (map, maps) {
+    setMaps({
+      mapInstance: map,
+      mapApi: maps,
     });
-    const nextMarkers = data.map(place => ({
-      position: place.geometry.location,
-    }));
-    console.log(nextMarkers);
   }
-  const onMapMounted = ref => {
-    refs.map = ref;
-  }
-  const [bounds, setBounds] = useState(null);
-  const onBoundsChanged = () => {
-    const data = {
-      bounds: refs.map.getBounds(),
-      center: refs.map.getCenter()
-    };
-    setBounds(data);
-  }
-  // google search end
 
-  const isLoading = ((loaction.length === 0) || (shopes.length === 0));
-  return (
-    <>
-    {isLoading ? (<p>Loading.....</p>) : (
-      <GoogleMap
-        ref={onMapMounted}
-        onBoundsChanged={onBoundsChanged}
-        defaultZoom={15}
-        defaultCenter={{ lat: loaction[0], lng: loaction[1] }}
-        // defaultOptions={{styles: mapStyle}}
-      >
-        {shopes.map((park, index) => (
-          <Marker
-            key={ park.properties.id }
-            position={{ 
-              lat: park.geometry.coordinates[1],
-              lng: park.geometry.coordinates[0] }}
-            onClick={() => {
-              setSelectPark(park);
-            }}
-            icon={{
-              url: '/skateboarding.svg',
-              scaledSize: new window.google.maps.Size(25, 25) 
-            }}
-          />
-        ))
-        }
-        {selectPark && (
-          <InfoWindow
-            position={{ 
-              lat: selectPark.geometry.coordinates[1],
-              lng: selectPark.geometry.coordinates[0] }}
-            onCloseClick={() => {
-              setSelectPark(null);
-            }}
-          >
-            <div>
-              <h2>{selectPark.properties.name}</h2>
-              <p>{selectPark.properties.DESCRIPTIO}</p>
-            </div>
-          </InfoWindow>
-        )}
-        {/* {!places ? null: (
-          <ol>
-            {places.map(
-              ({ place_id, formatted_address, geometry: { location } }) => {
-                return <li key={place_id}>
-                  {formatted_address}
-                  {" at "}({location.lat()}, {location.lng()})
-                </li>
-              }
-            )}
-          </ol>
-        )} */}
-        {console.log(bounds)}
-        <StandaloneSearchBox 
-            ref={onSearchBoxMounted}
-            // bounds={bounds}
-            onPlacesChanged={onPlacesChanged}
-          >
-          <input
-            type="text"
-            placeholder="Customized your placeholder"
-            style={{
-              boxSizing: `border-box`,
-              border: `1px solid transparent`,
-              width: `240px`,
-              height: `32px`,
-              padding: `0 12px`,
-              borderRadius: `3px`,
-              boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-              fontSize: `14px`,
-              outline: `none`,
-              textOverflow: `ellipses`,
-              position: 'absolute',
-              top: 0,
-              right: 0
-            }}
-          />
-        </StandaloneSearchBox>
-      </GoogleMap>
-    )}
-    </>
-  );
-}
+  const [places, setPlaces] = useState({});
+  function addPlace (place) {
+    setPlaces({ places: place });
+  }
 
-export default function MyMap() {
+  const isLoading = ((location.length === 0) || 
+    (shopes.length === 0));
+
   return (
     <div className="main-map">
-      <MapWrapped
-        googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${
-          process.env.REACT_APP_GOOGLE_KEY}`}
-        loadingElement={<div style={{ height: `100%` }} />}
-        containerElement={<div style={{ height: `100%` }} />}
-        mapElement={<div style={{ height: `100%` }} />}
-      />
+      <SearchBox map={maps.mapInstance} mapApi={maps.mapApi} addPlace={addPlace}/>
+      {isLoading ? (<p>Loading.....</p>) : (
+        <GoogleMapReact
+            bootstrapURLKeys={{ 
+              key: `${process.env.REACT_APP_GOOGLE_KEY}`,  
+              libraries: ['places', 'geometry'],
+            }}
+            defaultCenter={{ lat: location.lat, lng: location.lng }}
+            defaultZoom={15}
+            yesIWantToUseGoogleMapApiInternals
+            onGoogleApiLoaded={({ map, maps }) => {setGoogleMaps(map, maps)}}
+          >
+          {generateNearbyShop(location, shopes, DEFAULT_DISTANCE).map(shop => (
+            <Marker
+              key={shop.properties.id}
+              lat={shop.geometry.coordinates[1]}
+              lng={shop.geometry.coordinates[0]}
+            />
+          ))}
+        </GoogleMapReact>
+      )}
     </div> 
   );
 }

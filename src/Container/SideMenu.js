@@ -3,13 +3,13 @@ import { useMappedState } from 'redux-react-hook';
 import { Menu, Dropdown, Icon, Input, Skeleton } from 'antd';
 
 const { Search } = Input;
-const DEFAULT_DISTANCE = 2000;
+const DEFAULT_DISTANCE = 5000;
 
 export default function SideMenu () {
     function calculateDistance(pointA, pointB) {
       // http://www.movable-type.co.uk/scripts/latlong.html
-      const lat1 = pointA[0];
-      const lon1 = pointA[1];
+      const lat1 = pointA.lat;
+      const lon1 = pointA.lng;
     
       const lat2 = pointB[1];
       const lon2 = pointB[0];
@@ -58,11 +58,11 @@ export default function SideMenu () {
 
     const mapState = useCallback(
       state => ({
-        loaction: state.location.list,
+        location: state.location.list,
         shopes: state.shopes.list
       }), []);
-    const { loaction, shopes } = useMappedState(mapState);
-    const isLoading = ((loaction.length === 0) || (shopes.length === 0));
+    const { location, shopes } = useMappedState(mapState);
+    const isLoading = ((location.length === 0) || (shopes.length === 0));
     return (
       <div className="side-search">
           <div className="filter-type">
@@ -106,13 +106,13 @@ export default function SideMenu () {
           </div>
           {isLoading ? (<Skeleton active />) : (
             <ul className="shop-info">
-            {generateNearbyShop(loaction, shopes, DEFAULT_DISTANCE).length === 0 ? (<p>附近無藥局</p>) :
-              (generateNearbyShop(loaction, shopes, DEFAULT_DISTANCE).map(shop => (
+            {generateNearbyShop(location, shopes, DEFAULT_DISTANCE).length === 0 ? (<p>附近無藥局</p>) :
+              (generateNearbyShop(location, shopes, DEFAULT_DISTANCE).map(shop => (
               <li key={shop.properties.id}>
                 <button className="mark-button">
                   <Icon type="star" />
                 </button>
-                <span className="distance">{calculateDistance(loaction, shop.geometry.coordinates)}公尺</span>
+                <span className="distance">{calculateDistance(location, shop.geometry.coordinates)}公尺</span>
                 <p className="title">{shop.properties.name}</p>
                 <span className="address">{shop.properties.address}</span>
                 <span className="phone">{shop.properties.phone}</span>
