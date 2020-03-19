@@ -22,6 +22,9 @@ export const dispatchReceiveCname = () => (
     callGetShopes()
       .then((json) => {
         if (json) {
+          json.forEach(item => (
+            item.show = false
+          ));
           store.dispatch(receiveShopes(json));
         }
       })

@@ -69,6 +69,11 @@ export default function MyMap() {
     setPlaces({ places: place });
   }
 
+  function onInfoClick (key) {
+    const index = shopes.findIndex(e => e.properties.id === key);
+    shopes[index].show = !shopes[index].show;
+  }
+
   const isLoading = ((location.length === 0) || 
     (shopes.length === 0));
 
@@ -76,6 +81,7 @@ export default function MyMap() {
     <div className="main-map">
       <SearchBox map={maps.mapInstance} mapApi={maps.mapApi} addPlace={addPlace}/>
       {isLoading ? (<p>Loading.....</p>) : (
+        <>
         <GoogleMapReact
             bootstrapURLKeys={{ 
               key: `${process.env.REACT_APP_GOOGLE_KEY}`,  
@@ -85,15 +91,18 @@ export default function MyMap() {
             defaultZoom={15}
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map, maps }) => {setGoogleMaps(map, maps)}}
+            onChildClick={onInfoClick}
           >
           {generateNearbyShop(location, shopes, DEFAULT_DISTANCE).map(shop => (
             <Marker
               key={shop.properties.id}
               lat={shop.geometry.coordinates[1]}
               lng={shop.geometry.coordinates[0]}
+              place={shop}
             />
           ))}
         </GoogleMapReact>
+        </>
       )}
     </div> 
   );

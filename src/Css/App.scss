@@ -247,6 +247,7 @@ ul, ol, li {
     border-radius: 100%;
     user-select: none;
     transform: translate(-50%, -50%);
+    cursor: pointer;
 
     &:hover {
       z-index: 1;
