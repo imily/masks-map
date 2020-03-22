@@ -13,9 +13,11 @@ export default function MyMap() {
   const mapState = useCallback(
     state => ({
       location: state.location.list,
-      shopes: state.shopes.list
+      shopes: state.shopes.list,
+      distance: state.selectedOption.distance,
+      mask: state.selectedOption.mask
     }), []);
-  const { location, shopes } = useMappedState(mapState);
+  const { location, shopes, distance, mask } = useMappedState(mapState);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -64,9 +66,9 @@ export default function MyMap() {
     });
   }
 
-  const [places, setPlaces] = useState({});
+  const [places, setPlaces] = useState({lat:0, lng:0});
   function addPlace (place) {
-    setPlaces({ places: place });
+    setPlaces({ lat: place[0].geometry.location.lat(), lng: place[0].geometry.location.lng() });
   }
 
   function onInfoClick (key) {
@@ -76,6 +78,20 @@ export default function MyMap() {
 
   const isLoading = ((location.length === 0) || 
     (shopes.length === 0));
+  
+  const originLocation = { lat: location.lat, lng: location.lng };
+  const currentLocation = places.lat === 0 ? originLocation : places;
+  const currentDistance = distance.info === 0 ? DEFAULT_DISTANCE : distance.info * 1000;
+
+  function filterShopes () {
+    if (mask.info === 'child') {
+      return shopes.filter(shope => shope.properties.mask_child > 0);
+    }
+    if (mask.info === 'adult') {
+      return shopes.filter(shope => shope.properties.mask_adult > 0);
+    }
+    return shopes
+  }
 
   return (
     <div className="main-map">
@@ -87,13 +103,13 @@ export default function MyMap() {
               key: `${process.env.REACT_APP_GOOGLE_KEY}`,  
               libraries: ['places', 'geometry'],
             }}
-            defaultCenter={{ lat: location.lat, lng: location.lng }}
+            defaultCenter={originLocation}
             defaultZoom={15}
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map, maps }) => {setGoogleMaps(map, maps)}}
             onChildClick={onInfoClick}
           >
-          {generateNearbyShop(location, shopes, DEFAULT_DISTANCE).map(shop => (
+          {generateNearbyShop(currentLocation, filterShopes(), currentDistance).map(shop => (
             <Marker
               key={shop.properties.id}
               lat={shop.geometry.coordinates[1]}
