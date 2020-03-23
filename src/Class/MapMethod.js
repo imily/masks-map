@@ -1,5 +1,5 @@
 class MapMethod {
-    calculateDistance(pointA, pointB) {
+  static calculateDistance(pointA, pointB) {
         // http://www.movable-type.co.uk/scripts/latlong.html
         const lat1 = pointA.lat;
         const lon1 = pointA.lng;
@@ -21,10 +21,11 @@ class MapMethod {
         const distance = R * c;
         return Math.round(distance); // in meters
     }
-    generateNearbyShop(userLocation, shopes, distance){
+
+    static generateNearbyShop(userLocation, shopes, distance){
         const list = [];
         for (let i = 0; i < shopes.length; i ++) {
-          if (calculateDistance(userLocation, shopes[i].geometry.coordinates) <= distance) {
+          if (this.calculateDistance(userLocation, shopes[i].geometry.coordinates) <= distance) {
             list.push(shopes[i]);
           };
         }
