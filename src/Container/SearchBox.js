@@ -21,7 +21,6 @@ export default function SearchBox(props) {
 
     function onPlacesChanged () {
         const selected = searchBox.getPlaces();
-        console.log(selected);
         const { 0: place } = selected;
         if (!place.geometry) return;
         if (place.geometry.viewport) {
@@ -36,19 +35,17 @@ export default function SearchBox(props) {
 
     function clearSearchBox() {
         refs.searchInput.value = '';
-    }
-
-    const isLoading = (!props.map || !props.mapApi);
+		}
+		
     return (
         <>
-        {isLoading ? <p>search is loading...</p> : 
             <input
                 ref={onSearchBoxMounted}
                 type="text"
                 onFocus={clearSearchBox}
-                placeholder="Enter a location"
+                placeholder="我的位置"
+                className="google-search-input-style"
             />
-        }
         </>
     );
 }

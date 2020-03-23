@@ -102,6 +102,32 @@ ul, ol, li {
     }
 }
 
+.search-main{
+    position: relative;
+}
+
+.google-search-input-style {
+    position: absolute;
+    border-radius: 23px;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    height: 46px;
+    width: 100%;
+    padding: 0 25px;
+    font-size: 20px;
+    border: 0;
+
+    &::placeholder,
+    &::-webkit-input-placeholder {
+        color: rgba(75,109,228,0.6);
+        font-size: 24px;
+        font-weight: 500;
+        font-family: 'Noto Sans TC', sans-serif;
+        font-style: normal;
+    }
+}
+
 .mark-button {
     width: 47px;
     height: 47px; 
