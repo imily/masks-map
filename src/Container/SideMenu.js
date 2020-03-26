@@ -9,14 +9,12 @@ import MapMethod from '../Class/MapMethod';
 import SelectData from '../Class/SelectData';
 import SearchBox from './SearchBox';
 
+import Common from '../Class/Common';
+
 const { Search } = Input;
 
 export default function SideMenu (props) {
     const dispatch = useDispatch();
-
-    function gererateBusinessHours(text) {
-      return text.split('、');
-    }
 
     const onClick = (e) => {
       const type = e.domEvent.currentTarget.getAttribute('data-type');
@@ -121,7 +119,7 @@ export default function SideMenu (props) {
                 <div className="business-hours">
                   營業時間
                   <Dropdown
-                    overlay={gererateDropMenu(gererateBusinessHours(shop.properties.available))}
+                    overlay={gererateDropMenu(Common.gererateBusinessHours(shop.properties.available))}
                     trigger={['click']} className="select-sub-style"
                   >
                     <button className="ant-dropdown-link">

@@ -3,7 +3,7 @@ import InfoWindow from './InfoWindow';
 
 export default function Marker(props) {
     return (
-        <div>
+        <div className="map-marker">
             <div className="pin bounce"/>
             <div className="pulse" />
             <InfoWindow place={props.place}/>
