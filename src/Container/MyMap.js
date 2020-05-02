@@ -12,26 +12,26 @@ export default function MyMap(props) {
 
   return (
     <div className="main-map">
-        <GoogleMapReact
-            bootstrapURLKeys={{ 
-              key: `${process.env.REACT_APP_GOOGLE_KEY}`,  
-              libraries: ['places', 'geometry'],
-            }}
-            defaultCenter={props.originLocation}
-            defaultZoom={15}
-            yesIWantToUseGoogleMapApiInternals
-            onGoogleApiLoaded={({ map, maps }) => {props.setGoogleMaps(map, maps)}}
-            onChildClick={onInfoClick}
-          >
-          {MapMethod.generateNearbyShop(props.currentLocation, props.filterShopes(), props.currentDistance).map(shop => (
-            <Marker
-              key={shop.properties.id}
-              lat={shop.geometry.coordinates[1]}
-              lng={shop.geometry.coordinates[0]}
-              place={shop}
-            />
-          ))}
-        </GoogleMapReact>
+      <GoogleMapReact
+        bootstrapURLKeys={{ 
+          key: `${process.env.REACT_APP_GOOGLE_KEY}`,  
+          libraries: ['places', 'geometry'],
+        }}
+        defaultCenter={props.originLocation}
+        defaultZoom={15}
+        yesIWantToUseGoogleMapApiInternals
+        onGoogleApiLoaded={({ map, maps }) => {props.setGoogleMaps(map, maps)}}
+        onChildClick={onInfoClick}
+      >
+      {MapMethod.generateNearbyShop(props.currentLocation, props.filterShopes(), props.currentDistance).map(shop => (
+        <Marker
+          key={shop.properties.id}
+          lat={shop.geometry.coordinates[1]}
+          lng={shop.geometry.coordinates[0]}
+          place={shop}
+        />
+      ))}
+      </GoogleMapReact>
     </div> 
   );
 }

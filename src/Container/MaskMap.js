@@ -6,8 +6,9 @@ import { dispatchReceiveCname } from '../Redux/Action/Shopes';
 
 import SideMenu from './SideMenu';
 import MyMap from './MyMap';
+import MapMethod from '../Class/MapMethod';
 
-const DEFAULT_DISTANCE = 5000;
+const DEFAULT_DISTANCE = 1000;
 
 export default function MaskMap() {
   const [maps, setMaps] = useState({});
@@ -33,7 +34,6 @@ export default function MaskMap() {
     dispatch(dispatchReceiveCname());
 	},[]);
 	
-
   const [places, setPlaces] = useState({lat:0, lng:0});
   function addPlace (place) {
     setPlaces({ lat: place[0].geometry.location.lat(), lng: place[0].geometry.location.lng() });
@@ -73,7 +73,7 @@ export default function MaskMap() {
 					/>
 					<MyMap
 						setGoogleMaps={setGoogleMaps}
-						shopes={shopes}
+						shopes={MapMethod.generateNearbyShop(currentLocation, shopes, currentDistance)}
 						originLocation={originLocation}
 						currentLocation={currentLocation}
 						currentDistance={currentDistance}

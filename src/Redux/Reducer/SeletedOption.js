@@ -2,8 +2,8 @@ import { RECEIVE_SELECTED_DISTANCE, RECEIVE_SELECTED_MASK_TYPE } from '../Action
 
 const selectedOptionInitState = {
     distance: {
-        info: 5,
-        text: '五公里'
+        info: 1,
+        text: '一公里'
     },
     mask:  {
         info: '',

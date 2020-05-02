@@ -3,18 +3,18 @@ import callGetShopes from '../../Api/Shopes';
 import store from '../Store';
 
 export const receiveShopes = json => (
-    {
-        type: RECEIVE_SHOPES,
-        list: json
-    }
+  {
+    type: RECEIVE_SHOPES,
+    list: json
+  }
 );
 
 export const receiveShopesError = (errorCode, errorText) => (
-    {
-      type: RECEIVE_SHOPES_ERROR,
-      errorCode,
-      errorText,
-    }
+  {
+    type: RECEIVE_SHOPES_ERROR,
+    errorCode,
+    errorText,
+  }
 );
   
 export const dispatchReceiveCname = () => (

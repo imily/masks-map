@@ -3,10 +3,10 @@ import initMap from '../../Api/Location';
 import store from '../Store';
 
 export const receiveUserLocation = json => (
-    {
-        type: RECEIVE_USER_LOCATION,
-        list: json
-    }
+  {
+    type: RECEIVE_USER_LOCATION,
+    list: json
+  }
 );
 
 export const receiveUserLocationError = (errorCode, errorText) => (
@@ -24,6 +24,6 @@ export const dispatchReceiveLocation = () => (
         if (json) {
           store.dispatch(receiveUserLocation(json));
         }
-      })
+    })
   )
 );
