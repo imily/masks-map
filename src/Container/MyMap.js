@@ -10,6 +10,8 @@ export default function MyMap(props) {
     props.shopes[index].show = !props.shopes[index].show;
   }
 
+  const filteredShopes = MapMethod.generateNearbyShop(props.currentLocation, props.filterShopes(), props.currentDistance);
+
   return (
     <div className="main-map">
       <GoogleMapReact
@@ -23,7 +25,7 @@ export default function MyMap(props) {
         onGoogleApiLoaded={({ map, maps }) => {props.setGoogleMaps(map, maps)}}
         onChildClick={onInfoClick}
       >
-      {MapMethod.generateNearbyShop(props.currentLocation, props.filterShopes(), props.currentDistance).map(shop => (
+      {filteredShopes.map(shop => (
         <Marker
           key={shop.properties.id}
           lat={shop.geometry.coordinates[1]}

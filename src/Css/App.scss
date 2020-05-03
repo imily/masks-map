@@ -213,7 +213,6 @@ ul, ol, li {
   .note {
     font-size: 14px;
     color: #C4C4C4;
-    margin: 20px 0 25px;
     line-height: 1.6;
   }
 
@@ -427,4 +426,11 @@ ul, ol, li {
     color: #C4C4C4;
     margin: 10px 0 0 0;
   }
+}
+
+.ant-spin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
 }

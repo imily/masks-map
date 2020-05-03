@@ -38,14 +38,12 @@ export default function SearchBox(props) {
   }
   
   return (
-    <>
-      <input
-        ref={onSearchBoxMounted}
-        type="text"
-        onFocus={clearSearchBox}
-        placeholder="我的位置"
-        className="google-search-input-style"
-      />
-    </>
+    <input
+      ref={onSearchBoxMounted}
+      type="text"
+      onFocus={clearSearchBox}
+      placeholder="我的位置"
+      className="google-search-input-style"
+    />
   );
 }

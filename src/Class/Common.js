@@ -4,7 +4,6 @@ class Common {
 	}
 
 	static gererateTimeTable(list, type, icon) {
-    // console.log(list);
 		const week = {
 			sunday: '',
 			monday: '',

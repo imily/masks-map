@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { useMappedState, useDispatch } from 'redux-react-hook';
+import { Spin } from 'antd';
 
 import { dispatchReceiveLocation } from '../Redux/Action/Location';
 import { dispatchReceiveCname } from '../Redux/Action/Shopes';
@@ -36,7 +37,10 @@ export default function MaskMap() {
 	
   const [places, setPlaces] = useState({lat:0, lng:0});
   function addPlace (place) {
-    setPlaces({ lat: place[0].geometry.location.lat(), lng: place[0].geometry.location.lng() });
+    setPlaces({
+			lat: place[0].geometry.location.lat(),
+			lng: place[0].geometry.location.lng()
+		});
 	}
 
   const isLoading = ((location.length === 0) || 
@@ -58,7 +62,7 @@ export default function MaskMap() {
 	
   return (
     <div className="container">
-			{isLoading ? (<p>Loading.....</p>) : (
+			{isLoading ? <Spin size="large" /> : (
 				<>
 					<SideMenu
 						maps={maps}

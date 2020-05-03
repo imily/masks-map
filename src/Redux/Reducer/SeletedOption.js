@@ -7,7 +7,7 @@ const selectedOptionInitState = {
     },
     mask:  {
         info: '',
-        text: ''
+        text: '口罩種類'
     },
 };
 
