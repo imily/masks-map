@@ -1,27 +1,30 @@
-@import '~antd/dist/antd.css';
-@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC:300,400,500,900&display=swap');
- 
-body, html {
+@import "~antd/dist/antd.css";
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+TC:300,400,500,900&display=swap");
+
+body,
+html {
   padding: 0;
   margin: 0;
   list-style: none;
-  font-family: 'Noto Sans TC', sans-serif;
+  font-family: "Noto Sans TC", sans-serif;
   font-style: normal;
   font-weight: 500;
 }
 
-ul, ol, li {
+ul,
+ol,
+li {
   padding: 0;
   margin: 0;
   list-style: none;
 }
 
 *:focus {
-    outline: 0;
+  outline: 0;
 }
 
 .clear-fix:after {
-  content: '';
+  content: "";
   clear: both;
   display: block;
 }
@@ -30,15 +33,19 @@ ul, ol, li {
   width: 508px;
   position: fixed;
   height: 100%;
-  background: #FFF;
-  box-shadow: 0 0 35px rgba(0,0,0,0.2 );
+  background: #fff;
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.2);
   z-index: 999;
 }
 
 .filter-type {
   padding: 40px 39px;
-  background: linear-gradient(123.72deg, #4065E3 0%, rgba(120, 213, 215, 0.81) 105.41%);
-  
+  background: linear-gradient(
+    123.72deg,
+    #4065e3 0%,
+    rgba(120, 213, 215, 0.81) 105.41%
+  );
+
   button {
     display: inline-block;
     vertical-align: middle;
@@ -60,7 +67,7 @@ ul, ol, li {
   border-radius: 23px;
   border: 0;
   background: #fff;
-  color: rgba(75,109,228,0.6);
+  color: rgba(75, 109, 228, 0.6);
   font-size: 20px;
   padding: 0 17px;
 }
@@ -72,10 +79,10 @@ ul, ol, li {
 
   input::placeholder,
   input::-webkit-input-placeholder {
-    color: rgba(75,109,228,0.6);
+    color: rgba(75, 109, 228, 0.6);
     font-size: 24px;
     font-weight: 500;
-    font-family: 'Noto Sans TC', sans-serif;
+    font-family: "Noto Sans TC", sans-serif;
     font-style: normal;
   }
 
@@ -91,7 +98,7 @@ ul, ol, li {
   cursor: pointer;
 
   i {
-    color: #4B6DE4;
+    color: #4b6de4;
     font-size: 13px;
     vertical-align: middle;
     margin: 0 0 3px 8px;
@@ -106,7 +113,7 @@ ul, ol, li {
   }
 }
 
-.search-main{
+.search-main {
   position: relative;
 }
 
@@ -124,20 +131,20 @@ ul, ol, li {
 
   &::placeholder,
   &::-webkit-input-placeholder {
-    color: rgba(75,109,228,0.6);
+    color: rgba(75, 109, 228, 0.6);
     font-size: 24px;
     font-weight: 500;
-    font-family: 'Noto Sans TC', sans-serif;
+    font-family: "Noto Sans TC", sans-serif;
     font-style: normal;
   }
 }
 
 .mark-button {
   width: 47px;
-  height: 47px; 
+  height: 47px;
   border-radius: 50%;
   background: #fff;
-  color: rgba(75,109,228,0.6);
+  color: rgba(75, 109, 228, 0.6);
   border: 0;
   font-size: 31px;
   line-height: 1;
@@ -157,7 +164,7 @@ ul, ol, li {
   }
 
   li + li {
-    border-top: 2px solid #E5E5E5;
+    border-top: 2px solid #e5e5e5;
   }
 
   .mark-button {
@@ -167,7 +174,7 @@ ul, ol, li {
   }
 
   .distance {
-    color: #4B6DE4;
+    color: #4b6de4;
     margin-bottom: 4px;
     font-size: 20px;
     display: block;
@@ -180,9 +187,10 @@ ul, ol, li {
     margin-bottom: 20px;
   }
 
-  .address, .phone {
-      display: block;
-      margin-bottom: 10px;
+  .address,
+  .phone {
+    display: block;
+    margin-bottom: 10px;
   }
 
   .business-hours {
@@ -190,7 +198,7 @@ ul, ol, li {
     margin: 25px 0 30px;
 
     .select-sub-style {
-      background:#F1F4FF;
+      background: #f1f4ff;
       border-radius: 23px;
       line-height: 35px;
       border: 0;
@@ -212,7 +220,7 @@ ul, ol, li {
 
   .note {
     font-size: 14px;
-    color: #C4C4C4;
+    color: #c4c4c4;
     line-height: 1.6;
   }
 
@@ -231,7 +239,7 @@ ul, ol, li {
     }
 
     &:after {
-      content: '';
+      content: "";
       clear: both;
       display: block;
     }
@@ -244,18 +252,18 @@ ul, ol, li {
     }
 
     .adult {
-      color: #4B6DE4;
+      color: #4b6de4;
     }
 
     .child {
       float: right;
       text-align: right;
-      color: #78D5D7;
+      color: #78d5d7;
     }
   }
 
   .update-time {
-    color: #C4C4C4;
+    color: #c4c4c4;
     font-size: 16px;
     font-weight: 300;
     text-align: right;
@@ -314,7 +322,7 @@ ul, ol, li {
 }
 
 .pulse {
-  background: rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 50%;
   height: 14px;
   width: 14px;
@@ -329,9 +337,9 @@ ul, ol, li {
 .map-marker {
   position: relative;
 }
-  
+
 .info-window {
-  font-family: 'Noto Sans TC', sans-serif;
+  font-family: "Noto Sans TC", sans-serif;
   width: 690px;
   background: #fff;
   border-radius: 25px;
@@ -384,33 +392,33 @@ ul, ol, li {
     margin: 0 0 5px;
   }
 
-  .mask-type{
+  .mask-type {
     margin-top: 40px;
     font-weight: 900;
     font-size: 36px;
     line-height: 1.2;
 
-    b{
+    b {
       font-size: 24px;
       display: inline-block;
       margin: 0 5px 0 0;
     }
 
     .adult {
-        color: #4B6DE4;
-        display: inline-block;
+      color: #4b6de4;
+      display: inline-block;
     }
 
     .child {
-        color: #78D5D7;
-        display: inline-block;
-        margin: 0 0 0 20px;
+      color: #78d5d7;
+      display: inline-block;
+      margin: 0 0 0 20px;
     }
   }
 
   .updated {
     font-size: 16px;
-    color: #C4C4C4;
+    color: #c4c4c4;
     position: absolute;
     top: 35px;
     right: 40px;
@@ -423,7 +431,7 @@ ul, ol, li {
 
   .note {
     font-size: 16px;
-    color: #C4C4C4;
+    color: #c4c4c4;
     margin: 10px 0 0 0;
   }
 }

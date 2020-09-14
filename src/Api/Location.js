@@ -1,7 +1,10 @@
-export default function initMap () {
-  return new Promise((res, rej) => {
-    navigator.geolocation.watchPosition(position => {
-      res({lat: position.coords.latitude, lng: position.coords.longitude});
+/**
+ * 取得目前位置
+ */
+export default function getCurrentLocation() {
+  return new Promise((res) => {
+    navigator.geolocation.watchPosition((position) => {
+      res({ lat: position.coords.latitude, lng: position.coords.longitude });
     });
   });
 }

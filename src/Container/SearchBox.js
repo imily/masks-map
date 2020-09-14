@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
 export default function SearchBox(props) {
   const mapApi = props.mapApi;
@@ -9,17 +9,17 @@ export default function SearchBox(props) {
   useEffect(() => {
     if (map || mapApi) {
       searchBox = new mapApi.places.SearchBox(refs.searchInput);
-      searchBox.addListener('places_changed', onPlacesChanged);
-      searchBox.bindTo('bounds', map);
+      searchBox.addListener("places_changed", onPlacesChanged);
+      searchBox.bindTo("bounds", map);
     }
   });
 
   const refs = {};
-  const onSearchBoxMounted = ref => {
+  const onSearchBoxMounted = (ref) => {
     refs.searchInput = ref;
-  }
+  };
 
-  function onPlacesChanged () {
+  function onPlacesChanged() {
     const selected = searchBox.getPlaces();
     const { 0: place } = selected;
     if (!place.geometry) return;
@@ -34,9 +34,9 @@ export default function SearchBox(props) {
   }
 
   function clearSearchBox() {
-    refs.searchInput.value = '';
+    refs.searchInput.value = "";
   }
-  
+
   return (
     <input
       ref={onSearchBoxMounted}
